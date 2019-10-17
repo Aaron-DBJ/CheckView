@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CheckView">
+        <attr name="radius" format="dimension"/>
+        <attr name="checked" format="boolean"/>
+        <attr name="ringColor" format="color"/>
+        <attr name="mUnCheckedColor" format="color"/>
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="duration" format="integer"/>
+    </declare-styleable>
+</resources>
