@@ -3,8 +3,8 @@
     <declare-styleable name="CheckView">
         <attr name="radius" format="dimension"/>
         <attr name="checked" format="boolean"/>
-        <attr name="ringColor" format="color"/>
-        <attr name="mUnCheckedColor" format="color"/>
+        <attr name="checkedColor" format="color"/>
+        <attr name="unCheckedColor" format="color"/>
         <attr name="strokeWidth" format="dimension"/>
         <attr name="duration" format="integer"/>
         <attr name="shapeStyle" format="enum">

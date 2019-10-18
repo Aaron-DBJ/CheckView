@@ -115,8 +115,8 @@ public class CheckView extends View {
         TypedArray typedArray = getContext().obtainStyledAttributes(attributeSet, R.styleable.CheckView);
         radius = (int) typedArray.getDimension(R.styleable.CheckView_radius, minDefaultRadius);
         isChecked = typedArray.getBoolean(R.styleable.CheckView_checked, false);
-        mUnCheckedColor = typedArray.getColor(R.styleable.CheckView_mUnCheckedColor, Color.LTGRAY);
-        mCheckedColor = typedArray.getColor(R.styleable.CheckView_ringColor, Color.YELLOW);
+        mUnCheckedColor = typedArray.getColor(R.styleable.CheckView_unCheckedColor, Color.LTGRAY);
+        mCheckedColor = typedArray.getColor(R.styleable.CheckView_checkedColor, Color.YELLOW);
         mStrokeWidth = typedArray.getDimensionPixelSize(R.styleable.CheckView_strokeWidth, DisplayUtil.dp2px(mContext, 2));
         mDuration = typedArray.getInt(R.styleable.CheckView_duration, 600);
         mShapeStyle = typedArray.getInteger(R.styleable.CheckView_shapeStyle, 1);
@@ -202,15 +202,13 @@ public class CheckView extends View {
     private void initAnimator() {
         animatorUtils = AnimatorUtils.getInstance(this);
         //设置圆环上的进度动画
-        ObjectAnimator processAnimator = animatorUtils.ringProcessAnimator("ringProcess", mDuration / 2,
+        ObjectAnimator processAnimator = animatorUtils.createAnimator("ringProcess", mDuration / 2,
                 new AccelerateDecelerateInterpolator(), 0, 360);
         //设置上层实心圆收缩动画，用来逆向显示背景实心圆
-        ObjectAnimator circleShrinkAnimator = ObjectAnimator.ofInt(this, "shrinkCircleRadius", radius - mStrokeWidth, 0);
-        circleShrinkAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        circleShrinkAnimator.setDuration(mDuration / 2);
+        ObjectAnimator shrinkAnimator = animatorUtils.createAnimator("shrinkCircleRadius", mDuration/2,
+                new AccelerateDecelerateInterpolator(),radius - mStrokeWidth, 0);
         //设置√号浮现动画
-        ObjectAnimator fadeInAnimator = ObjectAnimator.ofInt(this, "tickAlpha", 0, 255);
-        fadeInAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        ObjectAnimator fadeInAnimator = animatorUtils.createAnimator("tickAlpha", mDuration,0, 255);
         //回弹动画
         boundAnimator = animatorUtils.heartBeatAnimator(mDuration, new AccelerateDecelerateInterpolator());
 
@@ -218,15 +216,13 @@ public class CheckView extends View {
         fadeAndBoundSet.playTogether(fadeInAnimator, boundAnimator);
         fadeAndBoundSet.setDuration(mDuration);
         mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playSequentially(processAnimator, circleShrinkAnimator, fadeAndBoundSet);
+        mAnimatorSet.playSequentially(processAnimator, shrinkAnimator, fadeAndBoundSet);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         drawShape(canvas);
-
     }
 
     private void drawShape(Canvas canvas) {

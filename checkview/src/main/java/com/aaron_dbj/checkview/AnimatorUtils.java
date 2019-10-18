@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class AnimatorUtils {
     private View target;
@@ -40,18 +41,22 @@ public class AnimatorUtils {
     }
 
     /**
-     * 设置圆环上的进度动画
+     * 通用的属性动画
      * @param propertyName
      * @param duration
      * @param interpolator
      * @param values
      * @return
      */
-    public ObjectAnimator ringProcessAnimator(String propertyName, int duration, TimeInterpolator interpolator, int...values){
-        ObjectAnimator processAnimator = ObjectAnimator.ofInt(target, propertyName, values);
-        processAnimator.setInterpolator(interpolator);
-        processAnimator.setDuration(duration);
-        return processAnimator;
+    public ObjectAnimator createAnimator(String propertyName, int duration, TimeInterpolator interpolator, int...values){
+        ObjectAnimator animator = ObjectAnimator.ofInt(target, propertyName, values);
+        animator.setInterpolator(interpolator);
+        animator.setDuration(duration);
+        return animator;
+    }
+
+    public ObjectAnimator createAnimator(String propertyName, int duration, int...values){
+        return createAnimator(propertyName, duration, new AccelerateDecelerateInterpolator(), values);
     }
 
 }
