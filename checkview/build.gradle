@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.Aaron-DBJ'
 
 android {
     compileSdkVersion 28
@@ -6,7 +8,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.aaron_dbj.checkview"
+//        applicationId "com.aaron_dbj.checkview"
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
