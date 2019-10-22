@@ -12,20 +12,10 @@
         android:id="@+id/tick"
         app:radius="20dp"
         app:strokeWidth="2dp"
-<<<<<<< HEAD
         app:shapeStyle="tick"
         app:duration="800"
         app:checkedColor="#ee2200"
         app:unCheckedColor="@android:color/darker_gray"
         android:layout_width="50dp"
         android:layout_height="50dp"/>
-
-
-=======
-        app:shapeStyle="heart"
-        app:ringColor="#ee2200"
-        app:mUnCheckedColor="@android:color/darker_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
->>>>>>> 789534e7f15c0a27f0fa90d5ec0569f3311b5a36
 </LinearLayout>
