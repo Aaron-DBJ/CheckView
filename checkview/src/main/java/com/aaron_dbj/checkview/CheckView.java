@@ -15,6 +15,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import androidx.annotation.Nullable;
 
+import static java.lang.Math.PI;
+
 public class CheckView extends View {
     private Context mContext;
     //圆形回弹缩放比例
@@ -70,16 +72,22 @@ public class CheckView extends View {
     private int mTickRadius;
     //√的点集
     private float[] points = new float[8];
-    //绘制的形状，有√和❤
+    //绘制的形状，有√、❤和⭐️
     private static final int TICK = 1;
     private static final int HEART = 2;
+    private static final int STAR = 3;
+
     private int mShapeStyle;
     private boolean isTiny = false;
 
     private AnimatorSet mAnimatorSet;
     private AnimatorUtils animatorUtils;
     private ObjectAnimator boundAnimator;
+    //图形为五角星时的动画
+    private AnimatorSet starAnimator;
     private OnCheckedChangeListener mOnCheckedChangeListener;
+    float angle = 72f;  //五个角对应的角度 360/5
+    double rad = 2 * PI / 360;  //1度对应的弧度
 
     public void setOnCheckedChangeListener(final OnCheckedChangeListener onCheckedChangeListener) {
         mOnCheckedChangeListener = onCheckedChangeListener;
@@ -170,6 +178,7 @@ public class CheckView extends View {
         points[5] = centerY + mTickRadius;
         points[6] = centerX + mTickRadius;
         points[7] = centerY - mTickRadius;
+        // 初始化属性动画
         initAnimator();
     }
 
@@ -185,10 +194,13 @@ public class CheckView extends View {
                 size = viewSize;
                 break;
             case MeasureSpec.EXACTLY:
-                if (HEART == mShapeStyle && measureSpecSize < DisplayUtil.dp2px(mContext, 14)) {
+                size = measureSpecSize;
+                if (HEART == mShapeStyle && size < DisplayUtil.dp2px(mContext, 14)) {
                     size = DisplayUtil.dp2px(mContext, 14);
                     isTiny = true;
-                } else if (TICK == mShapeStyle && measureSpecSize < DisplayUtil.dp2px(mContext, 12)){
+                } else if (TICK == mShapeStyle && size < DisplayUtil.dp2px(mContext, 12)){
+                    size = DisplayUtil.dp2px(mContext, 12);
+                } else if (STAR == mShapeStyle && size < DisplayUtil.dp2px(mContext, 12)){
                     size = DisplayUtil.dp2px(mContext, 12);
                 }
                 if (radius > size / 2) {
@@ -211,6 +223,8 @@ public class CheckView extends View {
         ObjectAnimator fadeInAnimator = animatorUtils.createAnimator("tickAlpha", mDuration,0, 255);
         //回弹动画
         boundAnimator = animatorUtils.heartBeatAnimator(mDuration, new AccelerateDecelerateInterpolator());
+        //设置图案为五角星时的动画
+        starAnimator = animatorUtils.rotateFadeInAnimator(mDuration, new AccelerateDecelerateInterpolator());
 
         AnimatorSet fadeAndBoundSet = new AnimatorSet();
         fadeAndBoundSet.playTogether(fadeInAnimator, boundAnimator);
@@ -232,6 +246,9 @@ public class CheckView extends View {
                 break;
             case HEART:
                 drawHeart(canvas);
+                break;
+            case STAR:
+                drawStar(canvas);
                 break;
         }
     }
@@ -277,6 +294,38 @@ public class CheckView extends View {
         }
         mHeartPaint.setColor(mCheckedColor);
         mHeartPaint.setStyle(Paint.Style.FILL);
+        canvas.drawPath(path, mHeartPaint);
+        if (!isAnimRunning) {
+            boundAnimator.start();
+            isAnimRunning = true;
+        }
+    }
+
+    private void drawStar(Canvas canvas){
+        if (radius <= minDefaultRadius){
+            radius = (mSize - mStrokeWidth)/2;
+        }
+        //五角星五个角顶点坐标算法:
+        //x = r * cos(n * angle * rad)
+        //y = r * sin(n * angle * rad)
+        float[] a = {(float) (Math.cos(0 * angle * rad) * radius), (float) (Math.sin(0 * angle * rad) * radius)};
+        float[] b = {(float) (Math.cos(1 * angle * rad) * radius), (float) (-Math.sin(1 * angle * rad) * radius)};
+        float[] c = {(float) (Math.cos(2 * angle * rad) * radius), (float) (-Math.sin(2 * angle * rad) * radius)};
+        float[] d = {(float) (Math.cos(3 * angle * rad) * radius), (float) (-Math.sin(3 * angle * rad) * radius)};
+        float[] e = {(float) (Math.cos(4 * angle * rad) * radius), (float) (-Math.sin(4 * angle * rad) * radius)};
+        canvas.translate(centerX, centerY);
+        canvas.rotate(-18);
+        mHeartPaint.setStyle(Paint.Style.FILL);
+        path.moveTo(a[0], a[1]);
+        path.lineTo(c[0], c[1]);
+        path.lineTo(e[0], e[1]);
+        path.lineTo(b[0], b[1]);
+        path.lineTo(d[0], d[1]);
+        path.close();
+        if (!isChecked){
+            canvas.drawPath(path, mHeartPaint);
+            return;
+        }
         canvas.drawPath(path, mHeartPaint);
         if (!isAnimRunning) {
             boundAnimator.start();

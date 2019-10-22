@@ -10,13 +10,14 @@
 
     <com.aaron_dbj.checkview.CheckView
         android:id="@+id/tick"
-        app:radius="30dp"
+        app:radius="20dp"
         app:strokeWidth="2dp"
         app:shapeStyle="tick"
-        app:ringColor="#ee2200"
-        app:mUnCheckedColor="@android:color/darker_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:duration="800"
+        app:checkedColor="#ee2200"
+        app:unCheckedColor="@android:color/darker_gray"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
 
 
 </LinearLayout>

@@ -10,6 +10,7 @@
         <attr name="shapeStyle" format="enum">
             <enum name="tick" value="1"/>
             <enum name="heart" value="2"/>
+            <enum name="star" value="3"/>
         </attr>
     </declare-styleable>
 </resources>

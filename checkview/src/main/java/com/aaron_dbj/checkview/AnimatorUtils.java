@@ -1,5 +1,6 @@
 package com.aaron_dbj.checkview;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
@@ -59,4 +60,13 @@ public class AnimatorUtils {
         return createAnimator(propertyName, duration, new AccelerateDecelerateInterpolator(), values);
     }
 
+    public AnimatorSet rotateFadeInAnimator(int duration, TimeInterpolator interpolator){
+        ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(target, "rotation", 0, 360);
+        ObjectAnimator fadeAnimator = ObjectAnimator.ofFloat(target, "alpha", 1f,  0f,  1f);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(rotateAnimator, fadeAnimator);
+        set.setInterpolator(interpolator);
+        set.setDuration(duration);
+        return set;
+    }
 }
